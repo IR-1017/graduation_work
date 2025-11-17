@@ -1,0 +1,58 @@
+version: "3.8"  #composeのファイルフォーマットバージョン
+
+services:  #コンテナの定義開始
+  db: #PostgresSQLデータベースの設定
+    image: postgres:16  #PostgresSQLの公式イメージ
+    restart: always #コンテナが停止したら自動で再起動する設定
+    environment:  #コンテナ内で使う環境変数
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: graduation_work_development
+      TZ: Asia/Tokyo
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data  #データを永続化し、コンテナを作り直してもDBデータが残る
+
+    # ports:  
+    #   - "5432:5432"
+
+    healthcheck:  #コンテナが正常に動いているかチェック
+      test: ["CMD-SHELL", "pg_isready -U postgres -d graduation_work_development"]  #指定したデータベースに接続可能か確認
+      interval: 10s #チェック感覚
+      timeout: 5s #タイムアウト時間
+      retries: 5  #リトライ回数
+
+  web:  #Railsアプリケーションの設定
+    build:  #Dockerイメージのbuild設定
+      context: .  #現在作業中のフォルダがbulid時にDockerへ渡される
+      dockerfile: Dockerfile.dev    #指定したファイルでbuildする
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0 -p 3000"
+    # ↑ サーバー起動時のコマンド：
+    # - bundle install: 必要なgemをインストール
+    # - rails db:prepare: DBの準備
+    # - サーバープロセスIDファイルの削除
+    # - 開発サーバーの起動
+
+    tty: true
+    stdin_open: true
+    #↑コンテナを対話的に扱えるようにする設定
+    volumes:
+      - .:/myapp:cached                # ホストのソースをマウント（編集を即時反映）
+      - bundle_data:/usr/local/bundle  # gems のキャッシュを永続化してビルド高速化
+      - node_modules:/myapp/node_modules
+    environment:  #環境変数の設定
+      RAILS_ENV: development
+      DATABASE_HOST: db
+      DATABASE_NAME: graduation_work_development
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: password
+      TZ: Asia/Tokyo
+    ports:
+      - "3000:3000" #Railsの標準ポート,ブラウザから localhost:3000 で Rails サーバにアクセスできるようする
+    depends_on: #依存関係の設定 ヘルスチェックがOKになったらDBを起動
+      db: 
+        condition: service_healthy
+
+volumes:  #コンテナ間やコンテナの再作成後もデータを保持したい領域を定義するためのもの
+  postgresql_data:  #Postgres データベースのデータファイルを永続化する領域
+  bundle_data:  #gemをコンテナ外に保管するための領域
+  node_modules: #フロントの依存（node_modules）を格納する領域
