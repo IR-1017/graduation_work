@@ -74,7 +74,7 @@
 - デプロイ先（Heroku / Renderなど）
 - 使用予定のGem（Devise / Omniauthなど）
 
-・バックエンド:Ruby on Rails 7.1.4  Ruby:3.2.2
+・バックエンド:Ruby on Rails 7.1.4  Ruby:3.2.3
 ・データベース: PostgreSQL
 ・デプロイ先: Render
 ・Railsで使用する主なgem:
