@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: letteo-web-service
+    env: ruby
+
+    region: singapore
+    plan: free
+
+    buildCommand: ./bin/render-build.sh
+    preDeployCommand: bundle exec rails db:migrate
+    startCommand: bundle exec puma -t 5:5 -p ${PORT:-3000} -e ${RACK_ENV:-development}
