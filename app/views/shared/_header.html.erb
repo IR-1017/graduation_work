@@ -1,9 +1,28 @@
 <header class="bg-gray-100 shadow p-4 fixed top-0 w-full z-10">
   <div class="container mx-auto flex justify-between items-center h-full">
     <h1 class="text-2xl font-bold text-gray-900"><%= link_to "Letteo", root_path %></h1>
-    <nav class="flex space-x-4">
-      <%= link_to "ログイン", root_path, class: "rounded-md bg-gray-800 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300" %>
-      <%= link_to "新規登録", root_path, class: "rounded-md bg-gray-800 px-4 py-2 text-white shadow   hover:bg-gray-700 active:scale-95 transition-all duration-300 mr-14" %>
-    </nav>
+
+    <%# ログイン中の場合：ログアウトボタンのみ表示%>
+    <% if user_signed_in? %>
+      <nav class= "flex space-x-4 mr-14">
+        <%= link_to "ログアウト",
+          destroy_user_session_path,
+          data: { turbo_method: :delete},
+          class: "rounded-md bg-gray-800 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300"
+        %>
+      </nav >
+
+    <% else %>
+
+      <%# 未ログイン状態：ログイン/新規登録ページでは非表示 %>
+      <% unless (controller_name == "sessions" && action_name == "new") || (controller_name == "registrations" && action_name == "new") %>
+
+        <nav class="flex space-x-4">
+          <%= link_to "ログイン", new_user_session_path, class: "rounded-md bg-gray-800 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300" %>
+          <%= link_to "新規登録", new_user_registration_path, class: "rounded-md bg-gray-800 px-4 py-2 text-white shadow   hover:bg-gray-700 active:scale-95 transition-all duration-300 mr-14" %>
+        </nav>
+      <% end %>
+    <% end %>
+
   </div>
 </header>
