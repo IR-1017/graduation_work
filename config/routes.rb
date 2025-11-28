@@ -2,11 +2,11 @@
 
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    sessions:      "users/sessions",
-    registrations: "users/registrations"
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
   }
   devise_scope :user do
-    get '/users', to: redirect("/users/sign_up")
+    get '/users', to: redirect('/users/sign_up')
   end
 
   root 'top_pages#index'
