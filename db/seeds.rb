@@ -9,3 +9,6 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+#loadは指定したファイルを実行するメソッド。 Rails.root.joinは指定ファイルの絶対パスを取得するので、絶対に正しいファイルパスを取得したい時に使える。
+load Rails.root.join("db/seeds/templates.rb")
