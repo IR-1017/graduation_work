@@ -30,6 +30,24 @@ class Template < ApplicationRecord
   scope :stationery, -> { where(kind: 'stationery') }
   scope :message_cards, -> { where(kind: 'message_card') }
 
+  #kindを日本語ラベルに変換(将来はi18n)
+  def kind_label
+    case kind
+    when 'stationery' then '便箋'
+    when 'message_card' then 'メッセージカード'
+    else kind
+    end
+  end
+
+  # 表示用の画像パスを返す（サムネイル優先 → なければ背景画像）
+  # &. (ぼっち演算子）は nil でもエラーにしない安全な呼び出し、dig も同様。
+  def display_image_path
+    return thumbnail_path if thumbnail_path.present?
+  
+    layout&.dig("background", "src")
+  end
+
+
   private
 
   # layout全体がHashかどうかと、canvas/background/placeholdersの有無・形式をまとめてチェック

@@ -64,7 +64,7 @@ GREEN_LEAF_LAYOUT = {
 GRAY_NEUTRAL_LAYOUT = GREEN_LEAF_LAYOUT.merge(
   "background" => {
     "type" => "image",
-    "src"  => "templates/stationery/gray_neutral_12lines_full.png"
+    "src"  => "templates/stationery/gray_netural_12lines_full.png"
   }
 ).freeze
 
@@ -123,7 +123,7 @@ templates = [
     kind:           "stationery",
     title:          "Gray Neutral Letter",
     layout:         GRAY_NEUTRAL_LAYOUT,
-    thumbnail_path: "templates/stationery/gray_neutral_12lines_thumb.png",
+    thumbnail_path: "templates/stationery/gray_netural_12lines_thumb.png",
     active:         true
   },
   {
