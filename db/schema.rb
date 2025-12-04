@@ -10,31 +10,52 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_251_128_001_633) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_04_002453) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'templates', force: :cascade do |t|
-    t.string 'kind', null: false
-    t.string 'title', null: false
-    t.jsonb 'layout', default: {}, null: false
-    t.string 'thumbnail_path'
-    t.boolean 'active', default: true, null: false
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index ['active'], name: 'index_templates_on_active'
-    t.index ['kind'], name: 'index_templates_on_kind'
+  create_table "letters", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "template_id", null: false
+    t.jsonb "body", default: {}, null: false
+    t.string "recipient_name"
+    t.string "sender_name"
+    t.string "view_token", null: false
+    t.string "view_password_digest"
+    t.boolean "enable_password", default: false, null: false
+    t.string "animation_ref"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["body"], name: "index_letters_on_body", using: :gin
+    t.index ["template_id"], name: "index_letters_on_template_id"
+    t.index ["user_id"], name: "index_letters_on_user_id"
+    t.index ["view_token"], name: "index_letters_on_view_token", unique: true
   end
 
-  create_table 'users', force: :cascade do |t|
-    t.string 'email', default: '', null: false
-    t.string 'encrypted_password', default: '', null: false
-    t.string 'reset_password_token'
-    t.datetime 'reset_password_sent_at'
-    t.datetime 'remember_created_at'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index ['email'], name: 'index_users_on_email', unique: true
-    t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true
+  create_table "templates", force: :cascade do |t|
+    t.string "kind", null: false
+    t.string "title", null: false
+    t.jsonb "layout", default: {}, null: false
+    t.string "thumbnail_path"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_templates_on_active"
+    t.index ["kind"], name: "index_templates_on_kind"
   end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "letters", "templates"
+  add_foreign_key "letters", "users"
 end

@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  template: one
+  body: 
+  recipient_name: MyString
+  sender_name: MyString
+  view_token: MyString
+  view_password_digest: MyString
+  enable_password: false
+  animation_ref: MyString
+
+two:
+  user: two
+  template: two
+  body: 
+  recipient_name: MyString
+  sender_name: MyString
+  view_token: MyString
+  view_password_digest: MyString
+  enable_password: false
+  animation_ref: MyString
