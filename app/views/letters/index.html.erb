@@ -1,0 +1,46 @@
+<section class="max-w-5xl mx-auto px-4 py-8">
+  <h1 class="text-2xl font-semibold text-center text-stone-800 mb-8">
+    贈った手紙一覧
+  </h1>
+
+  <% if @letters.any? %>
+    <div class="space-y-4">
+      <% @letters.each do |letter| %>
+        <article class="flex items-center gap-4 bg-white border border-stone-200 rounded-xl px-5 py-4 shadow-sm">
+          <!-- サムネイル -->
+          <div class="w-16 h-16 bg-stone-200 rounded-md overflow-hidden flex items-center justify-center">
+            <% if letter.template&.display_image_path.present? %>
+              <%= image_tag letter.template.display_image_path,
+                            alt: letter.template.title,
+                            class: "w-full h-full object-cover" %>
+            <% else %>
+              <span class="text-xs text-stone-500">No Image</span>
+            <% end %>
+          </div>
+
+          <!-- テキスト -->
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-stone-500 mb-0.5">
+              贈った手紙
+            </p>
+            <p class="text-lg font-medium text-stone-800 truncate">
+              <%= (letter.recipient_name.presence || "相手の名前未設定") %> さんへの手紙
+            </p>
+          </div>
+
+          <!-- ボタン -->
+          <div>
+            <%= link_to "手紙を開く",
+                        letter_path(letter),
+                        class: "inline-flex items-center px-4 py-2 rounded-md bg-stone-200 text-sm text-stone-800 hover:bg-stone-300" %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-center text-stone-500 mt-12">
+      まだ贈った手紙はありません。<br>
+      テンプレートを選んで最初の手紙を作ってみましょう。
+    </p>
+  <% end %>
+</section>

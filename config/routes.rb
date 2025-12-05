@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'letters/index'
+  get 'letters/show'
+  get 'letters/new'
+  get 'letters/create'
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'

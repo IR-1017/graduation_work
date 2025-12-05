@@ -5,6 +5,10 @@
     <%# ログイン中の場合：ログアウトボタンのみ表示%>
     <% if user_signed_in? %>
       <nav class= "flex space-x-4 mr-14">
+        <%= link_to "贈った手紙一覧",
+          letters_path,
+          class: "rounded-md bg-gray-800 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300"
+        %>
         <%= link_to "ログアウト",
           destroy_user_session_path,
           data: { turbo_method: :delete},
