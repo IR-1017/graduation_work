@@ -1,40 +1,41 @@
-<section class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-2xl font-semibold text-stone-800 mb-6">
-    手紙作成ページ
-  </h1>
+<section class="w-full px-6 py-8">
+  <div class=" max-w-7xl mr-auto ">
+    <h1 class="text-2xl font-semibold text-stone-800 mb-6">
+      手紙作成ページ
+    </h1>
 
-  <div class="flex gap-6">
+    <div class="flex  gap-6 items-start ">
 
-    <!-- 左サイドバー：テキスト設定（中身は後続issueで本実装） -->
-    <aside class="w-52 bg-stone-100 border border-stone-200 rounded-md p-4 space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-stone-700 mb-1">Text font</label>
-        <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
-          <option>標準フォント</option>
-        </select>
-      </div>
+      <!-- 左サイドバー：テキスト設定（中身は後続issueで本実装） -->
+      <aside class="flex-none w-64 bg-stone-100 border border-stone-200 rounded-md p-4 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-stone-700 mb-1">Text font</label>
+          <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
+            <option>標準フォント</option>
+          </select>
+        </div>
 
-      <div>
-        <label class="block text-sm font-medium text-stone-700 mb-1">Text size</label>
-        <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
-          <option>標準サイズ</option>
-        </select>
-      </div>
+        <div>
+          <label class="block text-sm font-medium text-stone-700 mb-1">Text size</label>
+          <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
+            <option>標準サイズ</option>
+          </select>
+        </div>
 
-      <div>
-        <label class="block text-sm font-medium text-stone-700 mb-1">Text color</label>
-        <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
-          <option>標準カラー</option>
-        </select>
-      </div>
-    </aside>
+        <div>
+          <label class="block text-sm font-medium text-stone-700 mb-1">Text color</label>
+          <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
+            <option>標準カラー</option>
+          </select>
+        </div>
+      </aside>
 
-    <!-- メインエリア -->
-    <div class="flex-1 bg-white border border-stone-200 rounded-md p-6 space-y-6">
+      <!-- メインエリア -->
+      <div class="flex-1 bg-white border border-stone-200 rounded-md p-6 space-y-6">
 
-      <!-- 選択中テンプレ＋デザイン変更 -->
-      <div class="flex gap-4 items-start">
-        <div class="w-40 h-28 bg-stone-200 rounded-md overflow-hidden flex items-center justify-center text-xs text-stone-600">
+        <!-- 選択中テンプレ＋デザイン変更 -->
+        <div class="flex gap-4 items-start">
+          <div class="<%= template_aspect_class(@template) %> w-40 overflow-hidden rounded-md bg-stone-200 flex items-center justify-center text-xs text-stone-600">
           <% if @template&.display_image_path.present? %>
             <%= image_tag @template.display_image_path,
                           alt: @template.title,
@@ -44,65 +45,66 @@
           <% end %>
         </div>
 
-        <div class="flex-1">
-          <p class="text-sm text-stone-600 mb-1">
-            選択中の便箋（メッセージカード）／封筒デザイン
-          </p>
-          <p class="text-base font-semibold text-stone-800 mb-3">
-            <%= @template.title %>
-          </p>
-          <%= link_to "デザイン変更",
-                      select_templates_path(kind: @template.kind),
-                      class: "inline-flex items-center px-4 py-1.5 rounded-md border border-stone-300 text-sm text-stone-700 hover:bg-stone-50" %>
+          <div class="flex-1">
+            <p class="text-sm text-stone-600 mb-1">
+              選択中の便箋（メッセージカード）／封筒デザイン
+            </p>
+            <p class="text-base font-semibold text-stone-800 mb-3">
+              <%= @template.title %>
+            </p>
+            <%= link_to "デザイン変更",
+                        select_templates_path(kind: @template.kind),
+                        class: "inline-flex items-center px-4 py-1.5 rounded-md border border-stone-300 text-sm text-stone-700 hover:bg-stone-50" %>
+          </div>
         </div>
-      </div>
 
-      <!-- 入力/プレビュー枠（中身は別issueで実装） -->
-      <div class="border-2 border-sky-400 bg-stone-100 rounded-md h-72 flex items-center justify-center text-stone-500">
-        入力／プレビュー画面表示（後続の issue で実装）
-      </div>
+        <!-- 入力/プレビュー枠 -->
+        <div class="mt-6">
+          <%= render "preview_canvas" %>
+        </div>
 
-      <!-- 手紙情報フォーム -->
-      <%= form_with model: @letter, local: true do |f| %>
-        <%= f.hidden_field :template_id, value: @template.id %>
+        <!-- 手紙情報フォーム -->
+        <%= form_with model: @letter, local: true do |f| %>
+          <%= f.hidden_field :template_id, value: @template.id %>
 
-        <div class="space-y-4">
+          <div class="space-y-4">
 
-          <div>
-            <%= f.label :recipient_name, "相手の名前", class: "block text-sm font-medium text-stone-800 mb-1" %>
-            <%= f.text_field :recipient_name,
-                             class: "w-full border border-stone-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-400",
-                             placeholder: "山田 太郎 さん など" %>
-          </div>
+            <div>
+              <%= f.label :recipient_name, "相手の名前", class: "block text-sm font-medium text-stone-800 mb-1" %>
+              <%= f.text_field :recipient_name,
+                               class: "w-full border border-stone-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-400",
+                               placeholder: "山田 太郎 さん など" %>
+            </div>
 
-          <div>
-            <%= f.label :sender_name, "あなたの名前", class: "block text-sm font-medium text-stone-800 mb-1" %>
-            <%= f.text_field :sender_name,
-                             class: "w-full border border-stone-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-400",
-                             placeholder: "あなたの名前" %>
-          </div>
+            <div>
+              <%= f.label :sender_name, "あなたの名前", class: "block text-sm font-medium text-stone-800 mb-1" %>
+              <%= f.text_field :sender_name,
+                               class: "w-full border border-stone-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-400",
+                               placeholder: "あなたの名前" %>
+            </div>
 
-          <!-- パスワード発行のチェックボックス -->
-          <div class="mt-4">
-            <%= f.label :enable_password, class: "flex items-start gap-2 text-sm text-stone-800 cursor-pointer" do %>
-              <%= f.check_box :enable_password, class: "mt-1" %>
-              <span>
-                閲覧時にパスワードを要求する
-                <span class="block text-xs text-stone-500">
-                  チェックを入れると、この手紙専用の閲覧用パスワードが発行されます（送信方法選択ページで確認できます）。
+            <!-- パスワード発行のチェックボックス -->
+            <div class="mt-4">
+              <%= f.label :enable_password, class: "flex items-start gap-2 text-sm text-stone-800 cursor-pointer" do %>
+                <%= f.check_box :enable_password, class: "mt-1" %>
+                <span>
+                  閲覧時にパスワードを要求する
+                  <span class="block text-xs text-stone-500">
+                    チェックを入れると、この手紙専用の閲覧用パスワードが発行されます（送信方法選択ページで確認できます）。
+                  </span>
                 </span>
-              </span>
-            <% end %>
-          </div>
+              <% end %>
+            </div>
 
-          <!-- ★ ここが submit ボタン -->
-          <div class="pt-4">
-            <%= f.submit "作成完了",
-                         class: "w-full inline-flex justify-center items-center px-4 py-2.5 rounded-md bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 active:scale-[0.99] transition" %>
+            <!-- ★ ここが submit ボタン -->
+            <div class="pt-4">
+              <%= f.submit "作成完了",
+                           class: "w-full inline-flex justify-center items-center px-4 py-2.5 rounded-md bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 active:scale-[0.99] transition" %>
+            </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
 
-    </div>
-  </div>
+      </div> <!-- /メインエリア -->
+    </div>   <!-- /flex -->
+  </div>     <!-- /max-w-7xl -->
 </section>
