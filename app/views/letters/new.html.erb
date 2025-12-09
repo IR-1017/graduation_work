@@ -1,10 +1,10 @@
 <section class="w-full px-6 py-8">
-  <div class=" max-w-7xl mr-auto ">
+  <div class="max-w-7xl mr-auto">
     <h1 class="text-2xl font-semibold text-stone-800 mb-6">
       手紙作成ページ
     </h1>
 
-    <div class="flex  gap-6 items-start ">
+    <div class="flex gap-6 items-start">
 
       <!-- 左サイドバー：テキスト設定（中身は後続issueで本実装） -->
       <aside class="flex-none w-64 bg-stone-100 border border-stone-200 rounded-md p-4 space-y-4">
@@ -30,44 +30,44 @@
         </div>
       </aside>
 
-      <!-- メインエリア -->
+      <!-- メインエリア：ここを form_with で丸ごとフォームにする -->
       <div class="flex-1 bg-white border border-stone-200 rounded-md p-6 space-y-6">
 
-        <!-- 選択中テンプレ＋デザイン変更 -->
-        <div class="flex gap-4 items-start">
-          <div class="<%= template_aspect_class(@template) %> w-40 overflow-hidden rounded-md bg-stone-200 flex items-center justify-center text-xs text-stone-600">
-          <% if @template&.display_image_path.present? %>
-            <%= image_tag @template.display_image_path,
-                          alt: @template.title,
-                          class: "w-full h-full object-cover" %>
-          <% else %>
-            選択したデザインが表示されます
-          <% end %>
-        </div>
-
-          <div class="flex-1">
-            <p class="text-sm text-stone-600 mb-1">
-              選択中の便箋（メッセージカード）／封筒デザイン
-            </p>
-            <p class="text-base font-semibold text-stone-800 mb-3">
-              <%= @template.title %>
-            </p>
-            <%= link_to "デザイン変更",
-                        select_templates_path(kind: @template.kind),
-                        class: "inline-flex items-center px-4 py-1.5 rounded-md border border-stone-300 text-sm text-stone-700 hover:bg-stone-50" %>
-          </div>
-        </div>
-
-        <!-- 入力/プレビュー枠 -->
-        <div class="mt-6">
-          <%= render "preview_canvas" %>
-        </div>
-
-        <!-- 手紙情報フォーム -->
         <%= form_with model: @letter, local: true do |f| %>
           <%= f.hidden_field :template_id, value: @template.id %>
 
-          <div class="space-y-4">
+          <!-- 選択中テンプレ＋デザイン変更 -->
+          <div class="flex gap-4 items-start">
+            <div class="<%= template_aspect_class(@template) %> w-40 overflow-hidden rounded-md bg-stone-200 flex items-center justify-center text-xs text-stone-600">
+              <% if @template&.display_image_path.present? %>
+                <%= image_tag @template.display_image_path,
+                              alt: @template.title,
+                              class: "w-full h-full object-cover" %>
+              <% else %>
+                選択したデザインが表示されます
+              <% end %>
+            </div>
+
+            <div class="flex-1">
+              <p class="text-sm text-stone-600 mb-1">
+                選択中の便箋（メッセージカード）／封筒デザイン
+              </p>
+              <p class="text-base font-semibold text-stone-800 mb-3">
+                <%= @template.title %>
+              </p>
+              <%= link_to "デザイン変更",
+                          select_templates_path(kind: @template.kind),
+                          class: "inline-flex items-center px-4 py-1.5 rounded-md border border-stone-300 text-sm text-stone-700 hover:bg-stone-50" %>
+            </div>
+          </div>
+
+          <!-- 入力/プレビュー枠（★ ここが textarea オーバーレイ付きプレビュー） -->
+          <div class="mt-6">
+            <%= render "preview_canvas" %>
+          </div>
+
+          <!-- 手紙情報フォーム -->
+          <div class="mt-6 space-y-4">
 
             <div>
               <%= f.label :recipient_name, "相手の名前", class: "block text-sm font-medium text-stone-800 mb-1" %>
@@ -96,13 +96,14 @@
               <% end %>
             </div>
 
-            <!-- ★ ここが submit ボタン -->
+            <!-- submit ボタン -->
             <div class="pt-4">
               <%= f.submit "作成完了",
                            class: "w-full inline-flex justify-center items-center px-4 py-2.5 rounded-md bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 active:scale-[0.99] transition" %>
             </div>
           </div>
-        <% end %>
+
+        <% end %> <!-- /form_with -->
 
       </div> <!-- /メインエリア -->
     </div>   <!-- /flex -->

@@ -43,13 +43,13 @@ GREEN_LEAF_LAYOUT = {
         "height"      => 40,
 
         # デフォルトフォント。それぞれのテンプレートごとに自由に設定可能。
-        "font_family" => "Noto Serif JP",
-        "font_size"   => 24,
-        "color"       => "#333333",
+        "font_family" => "Noto Sans JP",
+        "font_size"   => 16,
+        "color"       => "#000000",
         "align"       => "left",
 
         # 最大文字数の制限。編集画面のフロント側で利用する想定。
-        "constraints" => { "max_chars" => 40 }
+        "constraints" => { "max_chars" => 52 }
       }
     end
   end
@@ -96,12 +96,12 @@ BEIGE_FLORAL_LAYOUT = {
         "width"       => 830,
         "height"      => 40,
 
-        "font_family" => "Noto Serif JP",
-        "font_size"   => 26,
-        "color"       => "#333333",
+        "font_family" => "Noto Sans JP",
+        "font_size"   => 16,
+        "color"       => "#000000",
         "align"       => "left",
 
-        "constraints" => { "max_chars" => 30 }
+        "constraints" => { "max_chars" => 42 }
       }
     end
   end
