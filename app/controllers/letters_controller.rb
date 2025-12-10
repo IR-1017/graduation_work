@@ -26,9 +26,22 @@ class LettersController < ApplicationController
   # 手紙を実際に保存する処理
   # ※ issue13 で body(JSON)の保存ロジックを本格実装予定なので、ここでは骨組み。
   def create
-    # ひとまず最低限：テンプレとの関連と、宛名や差出人などを受け取る形だけ用意しておく
-    @letter = current_user.letters.new(letter_params)
-    @template = @letter.template
+
+    @template = Template.find(letter_params[:template_id])
+    #ベースとなるletterオブジェクトを生成
+    @letter = current_user.letters.new(
+      template: @template,
+      recipient_name: letter_params[:recipient_name],
+      sender_name: letter_params[:sender_name],
+      enable_password: letter_params[:enable_password]
+    )
+
+    #placehoders(行ごとの本文)をbody(jsonb)に格納。メソッドはmodelで定義
+    @letter.build_body_from_placeholders!(
+      template: @template,
+      placeholders: letter_params[:placeholders] || {}    
+    )
+    
 
     if @letter.save
       redirect_to @letter, notice: "手紙を作成しました。"
@@ -36,6 +49,8 @@ class LettersController < ApplicationController
       # バリデーションエラー時は new を再表示
       render :new, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to templates_path, alert: "テンプレートが見つかりませんでした。"
   end
 
   # GET /letters/:id
@@ -53,15 +68,15 @@ class LettersController < ApplicationController
   end
 
   # Strong Parameters
-  # issue10時点では、body の中身までは扱わず、骨組みだけ。
   def letter_params
     params.require(:letter).permit(
       :template_id,
       :recipient_name,
       :sender_name,
       :enable_password,
-      :animation_ref
-      # body は issue13 で JSON を組み立てて保存するタイミングで扱う
+      :animation_ref,
+      # :placeholdersだとハッシュを許可できない。↓の記述だとハッシュ(ネストされた子要素まで)許可できる。
+      placeholders: {}
     )
   end
 end
