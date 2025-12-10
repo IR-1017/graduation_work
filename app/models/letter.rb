@@ -6,11 +6,19 @@ class Letter < ApplicationRecord
   has_many :shares, dependent: :destroy
   has_many :accesses, dependent: :destroy
 
-  # issue14 で詳細バリデーションを追加するため、ここでは最低限だけ
-  validates :view_token, presence: true
+  validates :user, presence: true
+  validates :template, presence: true
+  validates :recipient_name, presence: true, length: { maximum: 50 }
+  validates :sender_name,    presence: true, length: { maximum: 50 }
+
+  #issue17にてview_password_digestのバリテーションを設定
+
+  validates :view_token, presence: true, uniqueness: true
   validates :body, presence: true
 
-  before_validation :ensure_view_token
+  validate :body_must_be_hash
+
+  before_validation :ensure_view_token, on: :create
 
   #body(jsonb)を組み立てる処理
   def build_body_from_placeholders!(template:, placeholders:)
@@ -41,6 +49,14 @@ class Letter < ApplicationRecord
 
   def ensure_view_token
     self.view_token ||= SecureRandom.urlsafe_base64(32)
+  end
+
+  def body_must_be_hash
+    return if body.blank?
+
+    unless body.is_a?(Hash)
+      errors.add(:body, "は不正な形式です（JSONオブジェクトで保存してください）")
+    end
   end
 end
 
