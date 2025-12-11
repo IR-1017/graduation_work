@@ -65,6 +65,7 @@ class LettersController < ApplicationController
   # → 他人の手紙のURLを叩いても見れないようにするため
   def set_letter
     @letter = current_user.letters.find(params[:id])
+    @template = @letter.template
   end
 
   # Strong Parameters
