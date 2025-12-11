@@ -35,19 +35,17 @@
 
         <%= form_with model: @letter, local: true do |f| %>
           <%= f.hidden_field :template_id, value: @template.id %>
-
-          <!-- 選択中テンプレ＋デザイン変更 -->
+            <!-- 選択中テンプレ＋デザイン変更 -->
           <div class="flex gap-4 items-start">
             <div class="<%= template_aspect_class(@template) %> w-40 overflow-hidden rounded-md bg-stone-200 flex items-center justify-center text-xs text-stone-600">
-              <% if @template&.display_image_path.present? %>
-                <%= image_tag @template.display_image_path,
-                              alt: @template.title,
-                              class: "w-full h-full object-cover" %>
-              <% else %>
-                選択したデザインが表示されます
-              <% end %>
+                <% if @template&.display_image_path.present? %>
+                  <%= image_tag @template.display_image_path,
+                                alt: @template.title,
+                                class: "w-full h-full object-cover" %>
+                <% else %>
+                  選択したデザインが表示されます
+                <% end %>
             </div>
-
             <div class="flex-1">
               <p class="text-sm text-stone-600 mb-1">
                 選択中の便箋（メッセージカード）／封筒デザイン

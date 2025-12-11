@@ -8,7 +8,7 @@
       <% @letters.each do |letter| %>
         <article class="flex items-center gap-4 bg-white border border-stone-200 rounded-xl px-5 py-4 shadow-sm">
           <!-- サムネイル -->
-          <div class="w-16 h-16 bg-stone-200 rounded-md overflow-hidden flex items-center justify-center">
+          <div class="<%= template_aspect_class(letter.template) %> w-40 bg-stone-200 rounded-md overflow-hidden flex items-center justify-center">
             <% if letter.template&.display_image_path.present? %>
               <%= image_tag letter.template.display_image_path,
                             alt: letter.template.title,

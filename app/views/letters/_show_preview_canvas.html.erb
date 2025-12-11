@@ -1,0 +1,51 @@
+<% data = scaled_layout(@template, display_width: 560) %>
+
+<% display_width     = data[:display_width] %>
+<% display_height    = data[:display_height] %>
+<% background        = data[:background] %>
+<% placeholders      = data[:placeholders_scaled] %>
+<% body_placeholders = @letter.body["placeholders"] || {} %>
+
+<div class="inline-flex border-2 border-sky-400 bg-stone-50 rounded-md p-4 overflow-auto">
+  <div
+    class="relative rounded-md overflow-hidden bg-stone-100"
+    style="width:<%= display_width %>px; height:<%= display_height %>px;"
+  >
+    <!-- 背景画像 -->
+    <% if background["src"].present? %>
+      <%= image_tag background["src"],
+                    class: "absolute inset-0 w-full h-full object-contain pointer-events-none",
+                    alt: @template.title %>
+    <% end %>
+
+    <!-- 行ガイド ＋ textarea（スケール適用済み） -->
+    <% placeholders.each do |ph| %>
+      <% next unless ph["kind"] == "text" %>
+
+      <!-- ★ ここから追加：行IDと max_chars を取り出す -->
+      <% line_id   = ph["id"] %>
+      <% value = body_placeholders.dig(line_id, "value").to_s %>
+      <% max_chars = ph.dig("constraints", "max_chars") %>
+
+
+      <!-- ★ ここから変更：ガイド枠だけの div → textarea を内包する絶対配置コンテナに変更 -->
+      <div
+        class="absolute"
+        style="
+          left:<%= ph["x_scaled"] %>px;
+          top:<%= ph["y_scaled"] %>px;
+          width:<%= ph["width_scaled"] %>px;
+          height:<%= ph["height_scaled"] %>px;
+        "
+      >
+        <div  class="w-full h-full flex items-center border-b",
+              style="border-bottom-color: #000000;"
+              >
+          <span>
+            <%= value %>
+          </span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
