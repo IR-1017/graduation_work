@@ -2,7 +2,13 @@
 
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
+  helper_method :public_page?
 
+
+  def public_page?
+    false
+  end
+  
   private
 
   def configure_permitted_parameters

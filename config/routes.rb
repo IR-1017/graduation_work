@@ -23,7 +23,15 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :letters, only: [:new, :create, :show, :index]
+  resources :letters, only: [:new, :create, :show, :index] do
+    member do
+      get :share
+    end
+  end
+
+  #公開URL
+  get "/l/:token", to: "accesses#show", as: :public_letter
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

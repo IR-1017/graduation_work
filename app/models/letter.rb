@@ -11,7 +11,8 @@ class Letter < ApplicationRecord
   validates :recipient_name, presence: true, length: { maximum: 50 }
   validates :sender_name,    presence: true, length: { maximum: 50 }
 
-  #issue17にてview_password_digestのバリテーションを設定
+  
+  has_secure_password :view_password, validations: false
 
   validates :view_token, presence: true, uniqueness: true
   validates :body, presence: true
@@ -19,6 +20,9 @@ class Letter < ApplicationRecord
   validate :body_must_be_hash
 
   before_validation :ensure_view_token, on: :create
+  before_validation :ensure_view_password_digest, on: :create
+
+  attr_accessor :generated_view_password
 
   #body(jsonb)を組み立てる処理
   def build_body_from_placeholders!(template:, placeholders:)
@@ -49,6 +53,15 @@ class Letter < ApplicationRecord
 
   def ensure_view_token
     self.view_token ||= SecureRandom.urlsafe_base64(32)
+  end
+
+  def ensure_view_password_digest
+    return unless enable_password?
+    return if view_password_digest.present?
+
+    plain = SecureRandom.base58(10)
+    self.view_password = plain
+    self.generated_view_password = plain
   end
 
   def body_must_be_hash
