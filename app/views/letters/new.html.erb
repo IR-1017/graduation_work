@@ -84,7 +84,7 @@
             <!-- パスワード発行のチェックボックス -->
             <div class="mt-4">
               <%= f.label :enable_password, class: "flex items-start gap-2 text-sm text-stone-800 cursor-pointer" do %>
-                <%= f.check_box :enable_password, class: "mt-1" %>
+                <%= f.check_box :enable_password, { class: "mt-1" }, "1", "0" %>
                 <span>
                   閲覧時にパスワードを要求する
                   <span class="block text-xs text-stone-500">

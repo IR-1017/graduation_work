@@ -45,15 +45,14 @@
         </p>
         <div class="flex items-center gap-2">
           <p class="flex-1 text-sm text-stone-800 break-all bg-white rounded border border-stone-200 px-2 py-1">
-            <%# 本番では view_token ではなく実際の URL を組み立てる想定 %>
-            <%= @letter.view_token %>
+            <%= public_letter_url(@letter.view_token) %>
           </p>
           <button
             type="button"
             class="shrink-0 inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium
                    bg-stone-800 text-white hover:bg-stone-700"
             data-action="click->clipboard#copy"
-            data-copy-text="<%= @letter.view_token %>"
+            data-copy-text="<%= public_letter_url(@letter.view_token) %>"
           >
             コピー
           </button>
@@ -66,25 +65,40 @@
           <p class="text-xs font-medium text-stone-500 mb-1">
             閲覧パスワード
           </p>
-          <div class="flex items-center gap-2">
-            <p class="flex-1 text-sm text-stone-800 break-all bg-white rounded border border-stone-200 px-2 py-1">
-              <%= @letter.view_password_digest.presence || "パスワード未設定" %>
-            </p>
-            <button
-              type="button"
-              class="shrink-0 inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium
-                    bg-stone-800 text-white hover:bg-stone-700"
-              data-action="click->clipboard#copy"
-              data-copy-text="<%= @letter.view_password_digest.to_s %>"
-            >
-              コピー
-            </button>
-          </div>
+          <% if @generated_view_password.present? %>
+            <div class="flex items-center gap-2">
+              <p class="flex-1 text-sm text-stone-800 break-all bg-white rounded border border-stone-200 px-2 py-1">
+                <%= @generated_view_password  %>
+              </p>
+              <button
+                type="button"
+                class="shrink-0 inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium
+                      bg-stone-800 text-white hover:bg-stone-700"
+                data-action="click->clipboard#copy"
+                data-copy-text="<%= @generated_view_password %>"
+              >
+                コピー
+              </button>
+            </div>
+          <% else %>
+            <div class="flex items-center gap-2">
+              <p class="flex-1 text-sm text-stone-800 break-all bg-white rounded border border-stone-200 px-2 py-1">
+                ※ セキュリティのため、パスワードは再表示できません。<br>
+                手紙を作成直後のみ確認できます。
+              </p>
+              <button
+                type="button"
+                class="shrink-0 inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium
+                      bg-stone-200 text-stone-400 cursor-not-allowed"
+                disabled
+                aria-disabled="true"
+              >
+                コピー
+              </button>
+            </div>
+          <% end %>
         </div>
       <% end %>
-
-      <!-- コピー結果メッセージ -->
-      <p class="text-[11px] text-stone-500 h-4" data-clipboard-target="feedback"></p>
     </div>
   </div>
 
