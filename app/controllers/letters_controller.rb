@@ -44,6 +44,7 @@ class LettersController < ApplicationController
     
 
     if @letter.save
+      password_in_session(@letter)
       redirect_to share_letter_path(@letter), notice: "手紙を作成しました。共有情報を確認してください。"
     else
       # バリデーションエラー時は new を再表示
@@ -57,10 +58,11 @@ class LettersController < ApplicationController
   # 作成済みの手紙詳細（自分の手紙のみ）
   def show
     # set_letter で @letter は取得済み
+    @generated_view_password = session.dig(:generated_view_password_by_letter_id, @letter.id.to_s)
   end
 
   def share
-    @generated_view_password = session.dig(:generated_view_password_by_letter_id, @letter.id)
+    @generated_view_password = session.dig(:generated_view_password_by_letter_id, @letter.id.to_s)
   end
 
   private
@@ -85,10 +87,10 @@ class LettersController < ApplicationController
     )
   end
 
-  def password_in_session
+  def password_in_session(letter)
     return if letter.generated_view_password.blank?
 
-    session[:generated_view_password_by_letter_id ] ||= {}
-    session[:generated_view_password_by_letter_id ][letter.id] = letter.generated_view_password
+    session[:generated_view_password_by_letter_id] ||= {}
+    session[:generated_view_password_by_letter_id][letter.id.to_s] = letter.generated_view_password
   end
 end
