@@ -7,7 +7,7 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%# stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
@@ -17,6 +17,7 @@
     <%= render 'shared/header'%>
     <main class="flex-grow pt-20 pb-16">
       <%= yield %>
+    </main>
     <%= render 'shared/footer'%>
   </body>
 </html>

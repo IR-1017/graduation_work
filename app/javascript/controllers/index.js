@@ -12,3 +12,6 @@ application.register("clipboard", ClipboardController)
 
 import MessageController from "./message_controller"
 application.register("message", MessageController)
+
+import LottieEnvelopeController from "./lottie_envelope_controller"
+application.register("lottie-envelope", LottieEnvelopeController)

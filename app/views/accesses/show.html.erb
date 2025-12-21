@@ -1,4 +1,68 @@
-<h1>Public Letter</h1>
-<p>tokenで取得できました</p>
-<p>宛名: <%= @letter.recipient_name %></p>
-<p>差出人: <%= @letter.sender_name %></p>
+<div
+  data-controller="lottie-envelope"
+  data-lottie-envelope-path-value="/lotties/envelope_open.json"
+  class="relative flex flex-col items-center justify-center min-h-[60vh]"
+>
+  <div class="mb-6 text-center">
+    <p class = "text-xl sm:text-2xl font-semibold text-stone-700">
+      手紙が届きました！
+    </p>
+    <p class="mt-1 text-sm text-stone-500">
+      封筒を開いてください
+    </p>
+  </div>
+  <div
+    data-lottie-envelope-target="container"
+    class="w-[320px] aspect-square overflow-hidden"
+  ></div>
+
+  <button
+    data-lottie-envelope-target="button"
+    data-action="click->lottie-envelope#open"
+    class="absolute bottom-0 mt-6 h-12 px-10 rounded-full bg-stone-700 text-white"
+  >
+    封筒を開く
+  </button>
+
+    <!-- モーダル -->
+  <div
+    data-lottie-envelope-target="modal"
+    class="fixed inset-0 z-50 flex items-center justify-center
+          opacity-0 pointer-events-none
+          transition-opacity duration-300 ease-out"
+    aria-hidden="true"
+  >
+    <!-- 背景 -->
+    <div
+      class="absolute inset-0 bg-black/40"
+      data-action="click->lottie-envelope#close"
+    ></div>
+
+    <!-- カード本体 -->
+    <div
+      data-lottie-envelope-target="modalCard"
+      class="relative w-full max-w-lg max-h-[80vh]
+            bg-white rounded-2xl shadow-xl
+            overflow-hidden
+            transform scale-95 opacity-0
+            transition-all duration-300 ease-out"
+    >
+      <!-- ヘッダー -->
+      <div class="flex items-center justify-between px-4 py-3 border-b border-stone-200">
+        <p class="text-sm font-semibold text-stone-700"><%= @template.kind %></p>
+        <button
+          type="button"
+          class="text-sm text-stone-500 hover:text-stone-700"
+          data-action="click->lottie-envelope#close"
+        >
+          閉じる
+        </button>
+      </div>
+
+      <!-- 本文 -->
+      <div class="p-4 overflow-auto">
+        <%= render "letters/show_preview_canvas" %>
+      </div>
+    </div>
+  </div>
+</div>
