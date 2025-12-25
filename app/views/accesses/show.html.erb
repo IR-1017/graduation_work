@@ -38,7 +38,7 @@
   <button
     data-lottie-envelope-target="button"
     data-action="click->lottie-envelope#open"
-    class="absolute bottom-0 mt-6 h-12 px-10 rounded-full bg-stone-700 text-white <%= can_open ? '' : 'hidden' %>"
+    class="mt-6 h-12 px-10 rounded-full bg-stone-700 text-white <%= can_open ? '' : 'hidden' %>"
     <%= can_open ? '' : 'disabled' %>
   >
     封筒を開く
@@ -58,17 +58,10 @@
       data-action="click->lottie-envelope#close"
     ></div>
     
-    <% modal_size_class =
-      if @template.kind == "stationery"
-        "max-w-xl max-h-[92vh]"
-      else
-        "max-w-lg max-h-[80vh]"
-      end 
-    %>
     <!-- カード本体 -->
     <div
       data-lottie-envelope-target="modalCard"
-      class="relative <% modal_size_class %>
+      class="relative
             bg-white rounded-2xl shadow-xl
             overflow-hidden
             transform scale-95 opacity-0
