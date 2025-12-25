@@ -1,3 +1,5 @@
+<% can_open = !@password_required || @authorized %>
+
 <div
   data-controller="lottie-envelope"
   data-lottie-envelope-path-value="/lotties/envelope_open.json"
@@ -5,7 +7,7 @@
 >
   <div class="mb-6 text-center">
     <p class = "text-xl sm:text-2xl font-semibold text-stone-700">
-      手紙が届きました！
+      <%= @letter.sender_name %>さんから手紙が届きました！
     </p>
     <p class="mt-1 text-sm text-stone-500">
       封筒を開いてください
@@ -15,11 +17,29 @@
     data-lottie-envelope-target="container"
     class="w-[320px] aspect-square overflow-hidden"
   ></div>
+  <% if @password_required && !@authorized %>
+    <div class="mt-6 w-full max-w-sm bg-white rounded-xl border border-stone-200 p-4">
+      <p class="text-sm font-semibold text-stone-700">
+        この手紙にはパスワードが設定されています
+      </p>
+      <p class="mt-1 text-xs text-stone-500">
+        閲覧するにはパスワードの入力が必要です。
+      </p>
 
+      <%= form_with url: verify_public_letter_path(@letter.view_token), method: :post, class: "mt-3 space-y-3" do %>
+        <%= password_field_tag :view_password, nil,
+        class: "w-full h-11 rounded-lg border-stone-300 focus:border-stone-500 focus:ring-stone-500 border border-gray-300",
+            placeholder: " パスワード" %>
+        <%= submit_tag "認証する",
+            class: "w-full h-11 rounded-lg bg-stone-700 text-white hover:bg-stone-800 " %>
+      <% end %>
+    </div>
+  <% end %>
   <button
     data-lottie-envelope-target="button"
     data-action="click->lottie-envelope#open"
-    class="absolute bottom-0 mt-6 h-12 px-10 rounded-full bg-stone-700 text-white"
+    class="absolute bottom-0 mt-6 h-12 px-10 rounded-full bg-stone-700 text-white <%= can_open ? '' : 'hidden' %>"
+    <%= can_open ? '' : 'disabled' %>
   >
     封筒を開く
   </button>
