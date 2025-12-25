@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  get 'letters/index'
-  get 'letters/show'
-  get 'letters/new'
-  get 'letters/create'
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
@@ -31,6 +27,8 @@ Rails.application.routes.draw do
 
   #公開URL
   get "/l/:token", to: "accesses#show", as: :public_letter
+  #閲覧パスワードの認証処理
+  post "/l/:token/verify", to: "accesses#verify", as: :verify_public_letter
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
