@@ -11,21 +11,21 @@
         <div>
           <label class="block text-sm font-medium text-stone-700 mb-1">Text font</label>
           <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
-            <option>標準フォント</option>
+            <option>Noto Sans JP(標準)</option>
           </select>
         </div>
 
         <div>
           <label class="block text-sm font-medium text-stone-700 mb-1">Text size</label>
           <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
-            <option>標準サイズ</option>
+            <option>16px(標準)</option>
           </select>
         </div>
 
         <div>
           <label class="block text-sm font-medium text-stone-700 mb-1">Text color</label>
           <select class="w-full border border-stone-300 rounded-md text-sm px-2 py-1 bg-white">
-            <option>標準カラー</option>
+            <option>黒(標準)</option>
           </select>
         </div>
       </aside>
@@ -48,7 +48,7 @@
             </div>
             <div class="flex-1">
               <p class="text-sm text-stone-600 mb-1">
-                選択中の便箋（メッセージカード）／封筒デザイン
+                選択中の便箋（メッセージカード）
               </p>
               <p class="text-base font-semibold text-stone-800 mb-3">
                 <%= @template.title %>
@@ -70,14 +70,14 @@
             <div>
               <%= f.label :recipient_name, "相手の名前", class: "block text-sm font-medium text-stone-800 mb-1" %>
               <%= f.text_field :recipient_name,
-                               class: "w-full border border-stone-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-400",
+                               class: "w-full border border-stone-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400",
                                placeholder: "山田 太郎 さん など" %>
             </div>
 
             <div>
               <%= f.label :sender_name, "あなたの名前", class: "block text-sm font-medium text-stone-800 mb-1" %>
               <%= f.text_field :sender_name,
-                               class: "w-full border border-stone-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-400",
+                               class: "w-full border border-stone-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-400",
                                placeholder: "あなたの名前" %>
             </div>
 
@@ -97,7 +97,7 @@
             <!-- submit ボタン -->
             <div class="pt-4">
               <%= f.submit "作成完了",
-                           class: "w-full inline-flex justify-center items-center px-4 py-2.5 rounded-md bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 active:scale-[0.99] transition" %>
+                           class: "w-full inline-flex justify-center items-center px-4 py-2.5 rounded-md bg-gray-700 text-white text-sm font-semibold hover:bg-gray-800 active:scale-[0.99] transition" %>
             </div>
           </div>
 
