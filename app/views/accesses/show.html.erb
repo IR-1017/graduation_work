@@ -31,7 +31,7 @@
         class: "w-full h-11 rounded-lg border-stone-300 focus:border-stone-500 focus:ring-stone-500 border border-gray-300",
             placeholder: " パスワード" %>
         <%= submit_tag "認証する",
-            class: "w-full h-11 rounded-lg bg-stone-700 text-white hover:bg-stone-800 " %>
+            class: "w-full h-11 rounded-lg bg-gray-700 text-white hover:bg-gray-800 " %>
       <% end %>
     </div>
   <% end %>
@@ -57,11 +57,18 @@
       class="absolute inset-0 bg-black/40"
       data-action="click->lottie-envelope#close"
     ></div>
-
+    
+    <% modal_size_class =
+      if @template.kind == "stationery"
+        "max-w-xl max-h-[92vh]"
+      else
+        "max-w-lg max-h-[80vh]"
+      end 
+    %>
     <!-- カード本体 -->
     <div
       data-lottie-envelope-target="modalCard"
-      class="relative w-full max-w-lg max-h-[80vh]
+      class="relative <% modal_size_class %>
             bg-white rounded-2xl shadow-xl
             overflow-hidden
             transform scale-95 opacity-0
@@ -69,7 +76,7 @@
     >
       <!-- ヘッダー -->
       <div class="flex items-center justify-between px-4 py-3 border-b border-stone-200">
-        <p class="text-sm font-semibold text-stone-700"><%= @template.kind %></p>
+        <p class="text-sm font-semibold text-stone-700"><%= @template.kind_label %></p>
         <button
           type="button"
           class="text-sm text-stone-500 hover:text-stone-700"
