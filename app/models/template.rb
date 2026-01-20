@@ -24,11 +24,22 @@ class Template < ApplicationRecord
   validates :active,
             inclusion: { in: [true, false] }
 
+  validates :category,
+            presence: true
+
   validate :validate_layout_schema
   # よく使う絞り込み条件をスコープとして定義
   scope :active, -> { where(active: true) }
   scope :stationery, -> { where(kind: 'stationery') }
   scope :message_cards, -> { where(kind: 'message_card') }
+
+  enum category: {
+    generic:  "generic", #汎用
+    thanks:  "thanks",  #感謝
+    congratulation:  "congratulation",  #お祝い
+    birthday:  "birthday"  #誕生日
+  }
+
 
   #kindを日本語ラベルに変換(将来はi18n)
   def kind_label
@@ -39,6 +50,15 @@ class Template < ApplicationRecord
     end
   end
 
+  def category_label
+    case category
+    when 'generic' then '汎用'
+    when 'thanks' then '感謝'
+    when 'congratulation' then 'お祝い'
+    when 'birthday' then '誕生日'
+    else category
+    end
+  end
   # 表示用の画像パスを返す（サムネイル優先 → なければ背景画像）
   # &. (ぼっち演算子）は nil でもエラーにしない安全な呼び出し、dig も同様。
   def display_image_path
