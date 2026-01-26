@@ -15,3 +15,6 @@ application.register("message", MessageController)
 
 import LottieEnvelopeController from "./lottie_envelope_controller"
 application.register("lottie-envelope", LottieEnvelopeController)
+
+import TemplateModalController from "./template_modal_controller"
+application.register("template-modal", TemplateModalController)
