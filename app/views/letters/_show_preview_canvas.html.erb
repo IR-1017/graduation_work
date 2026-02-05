@@ -27,6 +27,15 @@
       <% value = body_placeholders.dig(line_id, "value").to_s %>
       <% max_chars = ph.dig("constraints", "max_chars") %>
 
+      <!-- ✅ 追加：overrides を取得（なければ空Hash） -->
+      <% overrides = body_placeholders.dig(line_id, "overrides") %>
+      <% overrides = overrides.is_a?(Hash) ? overrides : {} %>
+
+      <!-- ✅ 追加：テンプレ default + overrides をマージして最終値を作る -->
+      <% font_family = overrides["font_family"].presence || ph["font_family"] || "Noto Sans JP" %>
+      <% font_size   = (overrides["font_size"].presence || ph["font_size"] || 16).to_i %>
+      <% color       = overrides["color"].presence || ph["color"] || "#000000" %>
+
 
       <!-- ★ ここから変更：ガイド枠だけの div → textarea を内包する絶対配置コンテナに変更 -->
       <div
@@ -38,10 +47,12 @@
           height:<%= ph["height_scaled"] %>px;
         "
       >
-        <div  class="w-full h-full flex items-center border-b",
+        <div  class="w-full h-full flex items-center border-b"
               style="border-bottom-color: #000000;"
               >
-          <span>
+          <span style="font-family:'<%= font_family %>', 'Noto Sans JP', system-ui, sans-serif;
+             font-size:<%= font_size %>px;
+             color:<%= color %>;">
             <%= value %>
           </span>
         </div>

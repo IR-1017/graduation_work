@@ -38,10 +38,24 @@ class Letter < ApplicationRecord
     placeholders.each do |line_id, attrs|
       #そこからvalueを変数に定義
       value = attrs["value"].to_s
+
+      raw = attrs["overrides"].is_a?(Hash) ? attrs["overrides"] : {}
       
+      overrides = {
+        "font_family" => raw["font_family"].to_s,
+        "font_size" => raw["font_size"].to_s,
+        "color" => raw["color"].to_s
+      }
+
+      overrides.delete_if { |_k, v| v.blank? }
+      overrides = nil if overrides.blank?
+
+
+
+
       body_hash["placeholders"][line_id] ||= {}
       body_hash["placeholders"][line_id]["value"] = value
-      body_hash["placeholders"][line_id]["overrides"] ||= nil
+      body_hash["placeholders"][line_id]["overrides"] = overrides
     end
     
     body_hash["background"] ||= nil

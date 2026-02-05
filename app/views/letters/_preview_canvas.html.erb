@@ -21,10 +21,8 @@
     <% placeholders.each do |ph| %>
       <% next unless ph["kind"] == "text" %>
 
-      <!-- ★ ここから追加：行IDと max_chars を取り出す -->
       <% line_id   = ph["id"] %>
       <% max_chars = ph.dig("constraints", "max_chars") %>
-      <!-- ★ ここまで追加 -->
 
       <!-- ★ ここから変更：ガイド枠だけの div → textarea を内包する絶対配置コンテナに変更 -->
       <div
@@ -42,18 +40,38 @@
               id: "letter_placeholders_#{line_id}_value",
               rows: 1,
               maxlength: max_chars,
+
+              data: {
+                action: "focus->text-style#select click->text-style#select",
+                "text-style-target": "line",
+                line_id: line_id,
+
+                default_font_family: ph["font_family"],
+                default_font_size: ph["font_size"],
+                default_color: ph["color"]
+              },
               class: "w-full h-full
                       border-0 border-b
                       bg-transparent
                       text-base text-stone-900
                       resize-none overflow-hidden
                       focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400",
-              style: "box-sizing: border-box,
-                      border-bottom-color: #000000,
-                      padding: 0 4px;"
+              style: "box-sizing: border-box;
+                      border-bottom-color: #000000;
+                      padding: 0 4px;
+                      font-family: #{ph["font_family"] || "Noto Sans JP"};
+                      font-size: #{(ph["font_size"] || 16).to_i}px;
+                      color: #{ph["color"] || "#000000"};"
             ) %>
+        <%= hidden_field_tag "letter[placeholders][#{line_id}][overrides][font_family]", "",
+            data: { "text-style-target": "hiddenFontFamily", line_id: line_id } %>
+
+        <%= hidden_field_tag "letter[placeholders][#{line_id}][overrides][font_size]", "",
+            data: { "text-style-target": "hiddenFontSize", line_id: line_id } %>
+
+        <%= hidden_field_tag "letter[placeholders][#{line_id}][overrides][color]", "",
+            data: { "text-style-target": "hiddenColor", line_id: line_id } %>
       </div>
-      <!-- ★ ここまで変更 -->
     <% end %>
   </div>
 </div>

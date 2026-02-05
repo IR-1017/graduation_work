@@ -18,3 +18,6 @@ application.register("lottie-envelope", LottieEnvelopeController)
 
 import TemplateModalController from "./template_modal_controller"
 application.register("template-modal", TemplateModalController)
+
+import TextStyleController from "./text_style_controller"
+application.register("text-style", TextStyleController)
