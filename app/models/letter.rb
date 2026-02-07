@@ -33,25 +33,33 @@ class Letter < ApplicationRecord
     #placehodlersの空のハッシュを用意
     body_hash["placeholders"] ||= {}
 
+    # ★ placeholders が Parameters の可能性があるので Hash化
+    placeholders = placeholders.to_h if placeholders.respond_to?(:to_h)
+
     #ここから1行ずつparamsで取得し、bodyに写す処理
     #line_id = "line_01", attrs = { "value" => "こんにちは" }みたいな感じ。to_sで文字列として上取るので、""(空文字)となる。
     placeholders.each do |line_id, attrs|
+
+      #△.respond_to?(:◯◯) ->△は◯というメソッドを持っている？という処理
+      #paramsで取得するのはハッシュではなくActionController::Parametersで、見た目はハッシュでも実際はハッシュではない
+      attrs = attrs.to_h if attrs.respond_to?(:to_h)
+
       #そこからvalueを変数に定義
       value = attrs["value"].to_s
 
-      raw = attrs["overrides"].is_a?(Hash) ? attrs["overrides"] : {}
+      raw = attrs["overrides"]
+      #ハッシュを持っていればハッシュ化して保存
+      raw = raw.to_h if raw.respond_to?(:to_h)
       
       overrides = {
         "font_family" => raw["font_family"].to_s,
         "font_size" => raw["font_size"].to_s,
         "color" => raw["color"].to_s
       }
-
+      #delete_ifメソッド ->条件にある要素を削除
+      #_kはハッシュ内のキーのこと、valueがスタイル
       overrides.delete_if { |_k, v| v.blank? }
       overrides = nil if overrides.blank?
-
-
-
 
       body_hash["placeholders"][line_id] ||= {}
       body_hash["placeholders"][line_id]["value"] = value
