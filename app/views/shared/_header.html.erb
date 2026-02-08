@@ -23,9 +23,9 @@
       <%# 未ログイン状態：ログイン/新規登録ページでは非表示 %>
       <% unless (controller_name == "sessions" && action_name == "new") || (controller_name == "registrations" && action_name == "new") %>
 
-        <nav class="flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
-          <%= link_to "ログイン", new_user_session_path, class: "text-sm font-semibold rounded-md bg-gray-700 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300" %>
-          <%= link_to "新規登録", new_user_registration_path, class: "text-sm font-semibold rounded-md bg-gray-700 px-4 py-2 text-white shadow   hover:bg-gray-700 active:scale-95 transition-all duration-300 mr-14" %>
+        <nav class="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:gap-4 items-stretch sm:items-center">
+          <%= link_to "ログイン", new_user_session_path, class: "w-full text-center text-sm font-semibold rounded-md bg-gray-700 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300" %>
+          <%= link_to "新規登録", new_user_registration_path, class: "w-full text-center text-sm font-semibold rounded-md bg-gray-700 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300" %>
         </nav>
       <% end %>
     <% end %>

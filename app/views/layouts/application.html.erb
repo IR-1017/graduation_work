@@ -18,9 +18,9 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="flex flex-col min-h-screen">
+  <body class="flex flex-col min-h-screen overflow-x-hidden">
     <%= render 'shared/header'%>
-    <main class="flex-grow pt-20 pb-16">
+    <main class="flex-grow pt-20 pb-16 overflow-x-hidden">
       <p class="text-green-600 text-center"><%= notice %></p>
       <p class="text-red-600 text-center"><%= alert %></p>
       <%= yield %>
