@@ -1,7 +1,7 @@
-<section class="max-w-5xl mx-auto px-4 py-10" data-controller="template-modal">
+<section class="max-w-5xl mx-auto px-4 pt-24 py-10" data-controller="template-modal">
 
   <!-- キャッチコピー部分 -->
-  <div class="bg-stone-200 px-4 px-8 sm:px-8 sm:py-12 mb-8 sm:mb-10">
+  <div class="bg-stone-200 px-8 py-10 sm:py-12 mb-6 sm:mb-8">
     <div class="max-w-2xl mx-auto">
       <p class="mb-6">
         <span class="block text-2xl md:text-3xl font-bold leading-snug text-stone-900">
@@ -31,10 +31,10 @@
     <h2 class="text-center text-sm font-semibold text-stone-800 mb-4">
       便箋デザイン一覧
     </h2>
-    <div class="-mx-4 px-4 overflow-w-auto">
-      <div class="flex gap-4 flex-nowrap justify-start">
+    <div class="-mx-4 px-4 overflow-x-auto overscroll-x-contain">
+      <div class="flex gap-4 flex-nowrap snap-x snap-mandatory scroll-px-4">
         <% @stationery_templates.each do |template| %>
-          <div class="w-28 shrink-0">
+          <div class="w-28 md:w-32 shrink-0 snap-start">
             <% if user_signed_in? %>
               <%= button_tag type:"button",
                               class: "block w-full text-left",
@@ -58,31 +58,34 @@
   </div>
 
   <!-- デザイン一覧（メッセージカード） -->
-  <div class="max-w-3xl mx-auto">
-    <h2 class="text-center text-sm font-semibold text-stone-800 mb-4">
+  <div class="-mx-4 px-4 overflow-x-auto overscroll-x-contain">
+    <h2 class="text-center text-sm font-semibold text-stone-800 mb-3">
       メッセージカードデザイン一覧
     </h2>
-    <div class="flex justify-center gap-6">
-      <% @message_card_templates.each do |template| %>
-        <div class="w-28 md:w-32">
-          <% if user_signed_in? %>
-            <%= button_tag type: "button",
-                            class: "block w-full text-left",
-                            data: {
-                              action: "click->template-modal#open",
-                              template_id: template.id,
-                              template_kind: template.kind,
-                              template_title: template.title,
-                              template_category: template.category,
-                              template_thumbnail: asset_path(template.thumbnail_path)
-                            } do %>
+
+    <div class="-mx-4 px-4 overflow-x-auto overscroll-x-contain">
+      <div class="flex gap-4 flex-nowrap snap-x snap-mandatory scroll-px-4">
+        <% @message_card_templates.each do |template| %>
+          <div class="w-28 md:w-32 shrink-0 snap-start">
+            <% if user_signed_in? %>
+              <%= button_tag type: "button",
+                              class: "block w-full text-left",
+                              data: {
+                                action: "click->template-modal#open",
+                                template_id: template.id,
+                                template_kind: template.kind,
+                                template_title: template.title,
+                                template_category: template.category,
+                                template_thumbnail: asset_path(template.thumbnail_path)
+                              } do %>
+                <%= render "templates/card", template: template %>
+              <% end %>
+            <% else %>
               <%= render "templates/card", template: template %>
             <% end %>
-          <% else %>
-            <%= render "templates/card", template: template %>
-          <% end %>
-        </div>
-      <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
   <!-- モーダル（デフォルト非表示） -->
@@ -118,12 +121,12 @@
             </div>
 
             <div>
-              <p class="text-xs text-tone-500">title</p>
+              <p class="text-xs text-stone-500">title</p>
               <p data-template-modal-target="title" class="font-semibold"></p>
             </div>
 
             <div>
-              <p class="text-xs text-tone-500">category</p>
+              <p class="text-xs text-stone-500">category</p>
               <p data-template-modal-target="category" class="font-semibold"></p>
             </div>
           </div>
