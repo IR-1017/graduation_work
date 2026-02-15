@@ -81,7 +81,15 @@
 
       <!-- 本文 -->
       <div class="p-4 overflow-auto">
-        <%= render "letters/show_preview_canvas" %>
+        <!-- スマホ用 -->
+        <div class="block md:hidden">
+          <%= render "letters/show_preview_canvas", display_width: 340 %>
+        </div>
+
+        <!-- PC用 -->
+        <div class="hidden md:block">
+          <%= render "letters/show_preview_canvas", display_width: 560 %>
+        </div>
       </div>
     </div>
   </div>

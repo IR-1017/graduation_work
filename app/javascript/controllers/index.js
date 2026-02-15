@@ -21,3 +21,6 @@ application.register("template-modal", TemplateModalController)
 
 import TextStyleController from "./text_style_controller"
 application.register("text-style", TextStyleController)
+
+import PanelToggleController from "./panel_toggle_controller"
+application.register("panel-toggle", PanelToggleController)
