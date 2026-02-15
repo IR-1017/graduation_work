@@ -14,6 +14,8 @@ export default class extends Controller {
     this.selectedLineId = null
     //パネルを操作不可状態にする。
     this._setPanelEnabled(false)
+  
+    this._applyScaleToAllLines()
   }
 
   //行を選択した時に、その行に現在適用されているスタイル(default か override)を取得し、パネルの表示を同期する処理
@@ -41,6 +43,12 @@ export default class extends Controller {
     //current.font_familyは整数なので、それを文字列に戻している
     this.fontSizeTarget.value = String(current.font_size)
     this.colorTarget.value = current.color
+
+    const scale = this._scale()
+    el.style.fontFamily = current.font_family
+    el.style.fontSize = `${Math.round(current.font_size * scale)}px`
+    el.style.color = current.color
+    el.style.lineHeight = "1.1"
   }
 
   //パネルで文字スタイルを変更したときに処理が起動
@@ -54,16 +62,18 @@ export default class extends Controller {
     if (!line) return
     //パネル操作で変更した文字スタイルをローカル変数に定義
     const font_family = this.fontFamilyTarget.value
-    const font_size = parseInt(this.fontSizeTarget.value, 10)
+    const font_size_base = parseInt(this.fontSizeTarget.value, 10)
     const color = this.colorTarget.value
 
     //選択されているtextareaのDOM情報のstyleにある文字スタイルを上書き->ブラウザ上では即時反映
+    const scale = this._scale()
     line.style.fontFamily = font_family
-    line.style.fontSize = `${font_size}px`
+    line.style.fontSize = `${Math.round(font_size_base * scale)}px`
     line.style.color = color
+    line.style.lineHeight = "1.1"
 
     //変更した文字スタイルをhidden fieldに書き込み、submit時にparams ->DB(JSON)へ渡す準備
-    this._setHidden(this.selectedLineId, { font_family, font_size, color })
+    this._setHidden(this.selectedLineId, { font_family, font_size: font_size_base, color })
   }
 
   // 「デフォルトに戻す」ボタン
@@ -76,12 +86,12 @@ export default class extends Controller {
     if (!line) return
     //デフォルトのスタイルをハッシュ形式で定義
     const d = this._defaultsFor(this.selectedLineId)
-    
+    const scale = this._scale()
     // textarea をデフォルトに戻す
     line.style.fontFamily = d.font_family
-    line.style.fontSize = `${d.font_size}px`
+    line.style.fontSize = `${Math.round(d.font_size * scale)}px`
     line.style.color = d.color
-
+    line.style.lineHeight = "1.1"
     // hidden を空に（→ サーバ側で nil にする）
     this._setHidden(this.selectedLineId, { font_family: "", font_size: "", color: "" })
 
@@ -148,5 +158,28 @@ export default class extends Controller {
     if (hf) hf.value = font_family
     if (hs) hs.value = font_size === "" ? "" : String(font_size)
     if (hc) hc.value = color
+  }
+
+  _scale() {
+  const hosts = Array.from(this.element.querySelectorAll("[data-text-style-scale-value]"))
+
+  // 表示中のほう（hiddenじゃないほう）を優先
+  const visibleHost = hosts.find((el) => el.offsetParent !== null)
+  const host = visibleHost || hosts[0]
+  if (!host) return 1
+
+  const v = host.dataset.textStyleScaleValue
+  const scale = parseFloat(v)
+  if (!Number.isFinite(scale) || scale <= 0) return 1
+  return scale
+}
+
+  _applyScaleToAllLines() {
+    const scale = this._scale()
+    this.lineTargets.forEach((line) => {
+      const baseSize = parseInt(line.dataset.defaultFontSize || "16", 10)
+      line.style.fontSize = `${Math.round(baseSize * scale)}px`
+      line.style.lineHeight = "1.1"
+    })
   }
 }

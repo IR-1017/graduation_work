@@ -1,5 +1,5 @@
-<% display_w = local_assigns[:display_width] ||560 %>
-
+<% display_w = local_assigns[:display_width] || 560 %>
+<% scale = display_w.to_f / 560.0 %>
 <% data = scaled_layout(@template, display_width: display_w) %>
 
 <% display_width  = data[:display_width] %>
@@ -11,6 +11,7 @@
   <div
     class="mx-auto relative rounded-md overflow-hidden bg-stone-100"
     style="width:<%= display_width %>px; height:<%= display_height %>px;"
+    data-text-style-scale-value="<%= scale %>"
   >
     <!-- 背景画像 -->
     <% if background["src"].present? %>
@@ -61,6 +62,7 @@
               style: "box-sizing: border-box;
                       border-bottom-color: #000000;
                       padding: 0 4px;
+                      line-height: 1.1;
                       font-family: #{ph["font_family"] || "Noto Sans JP"};
                       font-size: #{(ph["font_size"] || 16).to_i}px;
                       color: #{ph["color"] || "#000000"};"
