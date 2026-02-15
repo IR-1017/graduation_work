@@ -1,5 +1,4 @@
 <% display_w = local_assigns[:display_width] || 560 %>
-<% scale = display_w.to_f / 560.0 %>
 <% data = scaled_layout(@template, display_width: display_w) %>
 
 <% display_width  = data[:display_width] %>
@@ -7,11 +6,10 @@
 <% background     = data[:background] %>
 <% placeholders   = data[:placeholders_scaled] %>
 
-<div class="w-full overflow-hidden border-2 border-gray-200 bg-stone-50 rounded-md p-3 sm:p-4">
+<div class="w-full overflow-hidden border-2 border-gray-200 bg-stone-50 rounded-md p-2 sm:p-3">
   <div
     class="mx-auto relative rounded-md overflow-hidden bg-stone-100"
     style="width:<%= display_width %>px; height:<%= display_height %>px;"
-    data-text-style-scale-value="<%= scale %>"
   >
     <!-- 背景画像 -->
     <% if background["src"].present? %>
@@ -24,7 +22,7 @@
     <% placeholders.each do |ph| %>
       <% next unless ph["kind"] == "text" %>
 
-      <% line_id   = ph["id"] %>
+      <% line_id   = ph["id"].to_s %>
       <% max_chars = ph.dig("constraints", "max_chars") %>
 
       <!-- ★ ここから変更：ガイド枠だけの div → textarea を内包する絶対配置コンテナに変更 -->

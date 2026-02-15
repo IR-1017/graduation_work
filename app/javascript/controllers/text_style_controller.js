@@ -12,10 +12,9 @@ export default class extends Controller {
   connect() {
     //現在選択されている行のIDを今後記憶するための箱を作っている
     this.selectedLineId = null
+    this.selectedLineEl = null
     //パネルを操作不可状態にする。
     this._setPanelEnabled(false)
-  
-    this._applyScaleToAllLines()
   }
 
   //行を選択した時に、その行に現在適用されているスタイル(default か override)を取得し、パネルの表示を同期する処理
@@ -26,7 +25,7 @@ export default class extends Controller {
     const lineId = el.dataset.lineId
     //thisをつけることでインスタンス変数のように扱える（他のメソッド内で使用できる）
     this.selectedLineId = lineId
-
+    this.selectedLineEl = el
     // forEachメソッド(配列の各要素に対して、同じ処理を順番に実行する)
     //this.lineTargets(各行)をt(textarea)として、各行のclassから削除する。
     //ここの処理は指定行をクリックした時に、他の行全てを未選択状態にすることを目的としている。
@@ -44,20 +43,20 @@ export default class extends Controller {
     this.fontSizeTarget.value = String(current.font_size)
     this.colorTarget.value = current.color
 
-    const scale = this._scale()
     el.style.fontFamily = current.font_family
-    el.style.fontSize = `${Math.round(current.font_size * scale)}px`
+    el.style.fontSize = `${current.font_size}px`
     el.style.color = current.color
     el.style.lineHeight = "1.1"
   }
 
   //パネルで文字スタイルを変更したときに処理が起動
   apply() {
+
     //スタイルを適用するべき行が決まっていない場合は処理をおとす
     //(!.)は◯◯がない/未設定/空なら処理をやめる
     if (!this.selectedLineId) return
     //現在選択している行に対応するtexeareaのDOM情報を定義
-    const line = this._findLine(this.selectedLineId)
+    const line = this.selectedLineEl || this._findLine(this.selectedLineId)
     //選択中の行IDはあるが、そのIDに対応するDOMがない場合に処理をおとす
     if (!line) return
     //パネル操作で変更した文字スタイルをローカル変数に定義
@@ -66,9 +65,8 @@ export default class extends Controller {
     const color = this.colorTarget.value
 
     //選択されているtextareaのDOM情報のstyleにある文字スタイルを上書き->ブラウザ上では即時反映
-    const scale = this._scale()
     line.style.fontFamily = font_family
-    line.style.fontSize = `${Math.round(font_size_base * scale)}px`
+    line.style.fontSize = `${font_size_base}px`
     line.style.color = color
     line.style.lineHeight = "1.1"
 
@@ -81,15 +79,14 @@ export default class extends Controller {
     //行が未選択の場合処理を落とす
     if (!this.selectedLineId) return
     //選択した行IDと一致する行IDのtextareaのDOM情報を取得する
-    const line = this._findLine(this.selectedLineId)
+    const line = this.selectedLineEl || this._findLine(this.selectedLineId)
     //DOMがなければ処理を落とす
     if (!line) return
     //デフォルトのスタイルをハッシュ形式で定義
     const d = this._defaultsFor(this.selectedLineId)
-    const scale = this._scale()
     // textarea をデフォルトに戻す
     line.style.fontFamily = d.font_family
-    line.style.fontSize = `${Math.round(d.font_size * scale)}px`
+    line.style.fontSize = `${d.font_size}px`
     line.style.color = d.color
     line.style.lineHeight = "1.1"
     // hidden を空に（→ サーバ側で nil にする）
@@ -105,6 +102,7 @@ export default class extends Controller {
   
   //パネルの有効/無効の処理
   _setPanelEnabled(enabled) {
+    if (!this.hasPanelTarget) return
     if (enabled) {
       this.panelTarget.classList.remove("opacity-50", "pointer-events-none")
     } else {
@@ -115,7 +113,10 @@ export default class extends Controller {
   //this.lineTargets ->全ての行配列(textarea)、find ->一致した最初の1要素を返す
   //t.dataset.LineId(そのtextareaが持つ行番号) === lineId(探したい行番号 返り値)
   _findLine(lineId) {
-    return this.lineTargets.find(t => t.dataset.lineId === lineId)
+    const candidates = this.lineTargets.filter(t => t.dataset.lineId === lineId)
+    if (candidates.length === 0) return null
+    const visible = candidates.find((el) => el.offsetParent !== null)
+    return visible || candidates[0]
   }
   //指定されたlineIdをもつtextareaから、デフォルトの文字スタイルをオブジェクトとして返す処理
   //{ font_family:◯◯,
@@ -160,26 +161,4 @@ export default class extends Controller {
     if (hc) hc.value = color
   }
 
-  _scale() {
-  const hosts = Array.from(this.element.querySelectorAll("[data-text-style-scale-value]"))
-
-  // 表示中のほう（hiddenじゃないほう）を優先
-  const visibleHost = hosts.find((el) => el.offsetParent !== null)
-  const host = visibleHost || hosts[0]
-  if (!host) return 1
-
-  const v = host.dataset.textStyleScaleValue
-  const scale = parseFloat(v)
-  if (!Number.isFinite(scale) || scale <= 0) return 1
-  return scale
-}
-
-  _applyScaleToAllLines() {
-    const scale = this._scale()
-    this.lineTargets.forEach((line) => {
-      const baseSize = parseInt(line.dataset.defaultFontSize || "16", 10)
-      line.style.fontSize = `${Math.round(baseSize * scale)}px`
-      line.style.lineHeight = "1.1"
-    })
-  }
 }
