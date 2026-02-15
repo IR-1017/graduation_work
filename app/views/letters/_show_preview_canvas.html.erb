@@ -26,7 +26,7 @@
       <% next unless ph["kind"] == "text" %>
 
       <!-- ★ ここから追加：行IDと max_chars を取り出す -->
-      <% line_id   = ph["id"] %>
+      <% line_id   = ph["id"].to_s %>
       <% value = body_placeholders.dig(line_id, "value").to_s %>
       <% max_chars = ph.dig("constraints", "max_chars") %>
 
