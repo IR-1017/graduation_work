@@ -1,4 +1,7 @@
-<% data = scaled_layout(@template, display_width: 560) %>
+
+<% display_w = local_assigns[:display_width] || 560 %>
+<% scale = display_w.to_f / 560.0 %>
+<% data = scaled_layout(@template, display_width: display_w) %>
 
 <% display_width     = data[:display_width] %>
 <% display_height    = data[:display_height] %>
@@ -33,7 +36,8 @@
 
       <!-- ✅ 追加：テンプレ default + overrides をマージして最終値を作る -->
       <% font_family = overrides["font_family"].presence || ph["font_family"] || "Noto Sans JP" %>
-      <% font_size   = (overrides["font_size"].presence || ph["font_size"] || 16).to_i %>
+      <%# <% font_size   = (overrides["font_size"].presence || ph["font_size"] || 16).to_i %>
+      <% font_size = ((overrides["font_size"].presence || ph["font_size"] || 16).to_i * scale).round %>
       <% color       = overrides["color"].presence || ph["color"] || "#000000" %>
 
 

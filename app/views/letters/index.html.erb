@@ -6,33 +6,42 @@
   <% if @letters.any? %>
     <div class="space-y-4">
       <% @letters.each do |letter| %>
-        <article class="flex items-center gap-4 bg-white border border-stone-200 rounded-xl px-5 py-4 shadow-sm">
-          <!-- サムネイル -->
-          <div class="<%= template_aspect_class(letter.template) %> w-40 bg-stone-200 rounded-md overflow-hidden flex items-center justify-center">
-            <% if letter.template&.display_image_path.present? %>
-              <%= image_tag letter.template.display_image_path,
-                            alt: letter.template.title,
-                            class: "w-full h-full object-cover" %>
-            <% else %>
-              <span class="text-xs text-stone-500">No Image</span>
-            <% end %>
-          </div>
+        <article class="bg-white border border-stone-200 rounded-xl px-4 py-4 sm:px-5 shadow-sm">
+          <div class="grid grid-cols-[112px_1fr] md:grid-cols-[160px_1fr_auto] gap-3 md:gap-4 items-start md:items-center">
+            <!-- サムネイル -->
+            <div class="<%= template_aspect_class(letter.template) %> w-28 md:w-40 bg-stone-200 rounded-md overflow-hidden flex items-center justify-center shrink-0">
+              <% if letter.template&.display_image_path.present? %>
+                <%= image_tag letter.template.display_image_path,
+                              alt: letter.template.title,
+                              class: "w-full h-full object-cover" %>
+              <% else %>
+                <span class="text-xs text-stone-500">No Image</span>
+              <% end %>
+            </div>
 
-          <!-- テキスト -->
-          <div class="flex-1 min-w-0">
-            <p class="text-sm text-stone-500 mb-0.5">
-              贈った手紙
-            </p>
-            <p class="text-lg font-medium text-stone-800 truncate">
-              <%= (letter.recipient_name.presence || "相手の名前未設定") %> さんへの手紙
-            </p>
-          </div>
+            <!-- テキスト -->
+            <div class="min-w-0">
+              <p class="text-sm text-stone-500 mb-0.5">
+                贈った手紙
+              </p>
+              <p class="text-base md:text-lg font-medium text-stone-800 truncate">
+                <%= (letter.recipient_name.presence || "相手の名前未設定") %> さんへの手紙
+              </p>
 
-          <!-- ボタン -->
-          <div>
-            <%= link_to "手紙を開く",
-                        letter_path(letter),
-                        class: "inline-flex items-center px-4 py-2 rounded-md bg-stone-200 text-sm text-stone-800 hover:bg-stone-300" %>
+              <!-- スマホ用 -->
+              <div class="mt-2 md:hidden">
+                <%= link_to "手紙を開く",
+                  letter_path(letter),
+                  class: "w-full inline-flex justify-center items-center px-4 py-2 rounded-md bg-stone-200 text-sm text-stone-800 hover:bg-stone-300" %>
+              </div>
+            </div>
+
+            <!-- md以上 -->
+            <div class="hidden md:block">
+              <%= link_to "手紙を開く",
+                          letter_path(letter),
+                          class: "inline-flex items-center px-4 py-2 rounded-md bg-stone-200 text-sm text-stone-800 hover:bg-stone-300" %>
+            </div>
           </div>
         </article>
       <% end %>

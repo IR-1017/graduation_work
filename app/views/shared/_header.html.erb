@@ -1,20 +1,20 @@
-<header class="bg-gray-100 shadow p-4 fixed top-0 w-full z-10">
-  <div class="container mx-auto flex items-center h-full <%= public_page? ? 'justify-center' : 'justify-between'%>">
+<header class="bg-gray-100 shadow fixed top-0 w-full z-10 overflow-x-hidden">
+  <div class="mx-auto w-full md:max-w-5xl overflow-x-hidden flex items-center <%= public_page? ? 'justify-center' : 'justify-between'%> px-2 py-4 sm:px-4">
     <%# 公開ページはボタン非表示%>
     <% if public_page? %>
-      <h1 class=" text-2xl font-bold text-gray-900"><%= link_to "Letteo", root_path %></h1>
+      <h1 class="text-2xl font-bold text-gray-900"><%= link_to "Letteo", root_path %></h1>
     <%# ログイン中の場合：ログアウトボタンのみ表示%>
     <% elsif user_signed_in? %>
       <h1 class="text-2xl font-bold text-gray-900"><%= link_to "Letteo", root_path %></h1>
-      <nav class= "grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:gap-4 items-stretch sm:items-center">
+      <nav class= "grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:gap-4 items-center justify-end max-w-full">
         <%= link_to "贈った手紙一覧",
           letters_path,
-          class: "text-sm font-semibold rounded-md bg-gray-700 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300"
+          class: "inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-700 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300 font-semibold h-8 px-3 text-xs sm:h-9 sm:px-4 sm:text-sm"
         %>
         <%= link_to "ログアウト",
           destroy_user_session_path,
           data: { turbo_method: :delete},
-          class: "text-sm font-semibold rounded-md bg-gray-700 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300"
+          class: "inline-flex items-center justify-center whitespace-nowrap rounded-md bg-gray-700 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300 font-semibold h-8 px-3 text-xs sm:h-9 sm:px-4 sm:text-sm"
         %>
       </nav >
 
@@ -24,8 +24,8 @@
       <% unless (controller_name == "sessions" && action_name == "new") || (controller_name == "registrations" && action_name == "new") %>
 
         <nav class="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:gap-4 items-stretch sm:items-center">
-          <%= link_to "ログイン", new_user_session_path, class: "w-full text-center text-sm font-semibold rounded-md bg-gray-700 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300" %>
-          <%= link_to "新規登録", new_user_registration_path, class: "w-full text-center text-sm font-semibold rounded-md bg-gray-700 px-4 py-2 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300" %>
+          <%= link_to "ログイン", new_user_session_path, class: " whitespace-nowrap w-full text-center rounded-md bg-gray-700 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300 font-semibold px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm" %>
+          <%= link_to "新規登録", new_user_registration_path, class: "whitespace-nowrap w-full text-center rounded-md bg-gray-700 text-white shadow hover:bg-gray-700 active:scale-95 transition-all duration-300 font-semibold px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm" %>
         </nav>
       <% end %>
     <% end %>
