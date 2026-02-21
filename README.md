@@ -55,10 +55,15 @@
 - パスワード付き閲覧
 - 受信ページでのアニメーション表示（Lottie）
 
-## 今後実装予定の機能(本リリース)
-- フォント / サイズ / 色の選択機能
-- 手紙へ画像添付機能
+## MVPリリース後追加機能(本リリース)
 - テンプレート(便箋/メッセージカードの増設)
+- UI調整(モーダル表示:トップページから手紙作成画面への遷移)
+- フォント / サイズ / 色の選択機能
+- iphone最適化(画面サイズ:全ページ) 
+- 手紙作成画面での文字入力の最適化
+
+## 今後追加する機能
+- 手紙へ画像添付機能
 - 開封演出の増設(lettiefilesより)
 - 送信機能(mail,line.QRコードなど)
 - ユーザーのパスワード再設定機能実装
@@ -71,7 +76,7 @@
 - Frontend: Tailwind CSS / Stimulus
 - Animation: lottie-web
 - Authentication: Devise
-- File Upload: ActiveStorage(本リリース)
+- File Upload: ActiveStorage(今後)
 - Deploy: Render
 
 ## デモ

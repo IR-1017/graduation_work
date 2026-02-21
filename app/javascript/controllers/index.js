@@ -24,3 +24,6 @@ application.register("text-style", TextStyleController)
 
 import PanelToggleController from "./panel_toggle_controller"
 application.register("panel-toggle", PanelToggleController)
+
+import LineFlowController from "./line_flow_controller"
+application.register("line-flow", LineFlowController)
