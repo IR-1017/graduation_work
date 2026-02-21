@@ -10,6 +10,7 @@
   <div
     class="mx-auto relative rounded-md overflow-hidden bg-stone-100"
     style="width:<%= display_width %>px; height:<%= display_height %>px;"
+    data-controller="line-flow"
   >
     <!-- 背景画像 -->
     <% if background["src"].present? %>
@@ -40,11 +41,21 @@
               nil,                                        # ★ 既存値は issue13 で対応
               id: "letter_placeholders_#{line_id}_value",
               rows: 1,
+              wrap: "off",
               maxlength: max_chars,
 
               data: {
-                action: "focus->text-style#select click->text-style#select",
+                action: [
+                        "focus->text-style#select",
+                        "click->text-style#select",
+                        "keydown->line-flow#onKeydown",
+                        "input->line-flow#onInput",
+                        "compositionstart->line-flow#onCompositionStart",
+                        "compositionend->line-flow#onCompositionEnd"
+                ].join(" "),
                 "text-style-target": "line",
+                "line-flow-target": "line",
+
                 line_id: line_id,
 
                 default_font_family: ph["font_family"],
