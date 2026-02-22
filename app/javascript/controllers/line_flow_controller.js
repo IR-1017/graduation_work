@@ -67,55 +67,75 @@ export default class extends Controller {
       this._fitLine(i)
     }
   }
-
+  //textareaの横幅におさまらない分を次の行へ押し出す処理
   _fitLine(i) {
+    //選択中のi行目のtextareaのDOM要素を変数へ
     const el = this.lineTargets[i]
+    //i+1行目のtextareaのDOM要素を変数へ
     const next = this.lineTargets[i + 1]
+    //i行目のtextareaがない場合は処理をおとす
     if (!el) return
 
-    // 改行除去（既存）
+    // textareaのDOM要素から入力された文字列を変数へ(文字列がなければ"")
     const raw = el.value || ""
+    //Windows改行（\r\n）も、普通の改行（\n）も、全部消す->改行をなくしたものを変数に。
     const text = raw.replace(/\r?\n/g, "")
+    //text(改行含むかもしれない)とtext（改行を全部削除した文字列)が等しくない場合、
+    //textarea内の中身を上書きする。変更があったときのみ処理するようにしている
     if (text !== raw) el.value = text
 
-    // 押し出し前にキャレット位置を覚える
+    // selStartに選択中のDOM要素の現在のカーソル位置(のインデックス)を返す ※カーソルor選択中の最初の位置
     const selStart = el.selectionStart
+    //選択中でなければselectionStartと同じ位置(インデックス)を返す、選択中であれば選択範囲の最後の位置を返す
     const selEnd = el.selectionEnd
+    //論理演算のため、true or falseがはいる。末尾にカーソルがあるならtrue、それ以外false
     const caretAtEnd = (selStart === selEnd) && (selEnd === text.length)
-
+    //el(textarea)内の最終的に適用されているCSSの値をかえす
     const style = getComputedStyle(el)
+    //textareaの左右paddingの合計数値(px)を計算する(合計幅)
+    //parseFloat()-> 例:12px -> 12
     const paddingX =
       parseFloat(style.paddingLeft || "0") + parseFloat(style.paddingRight || "0")
+    //el.clientWidth(選択したtextarea内の要素の内側の寸法(content+padding)-paddingX(padding分)で実際に文字が描画されるcontent部分の横幅を求める
     const maxWidth = el.clientWidth - paddingX
     if (!maxWidth || maxWidth <= 0) return
-
+    //this._ctx.font上書き(計測器の設定を合わせる) 基本的にstyle.fontでfont一式は取得できる
     this._ctx.font = style.font || `${style.fontSize} ${style.fontFamily}`
-
+    //今のテキストの幅がtextareaのcontent幅以内であれば処理をおとす
     if (this._textWidth(text) <= maxWidth) return
 
-    // 二分探索（既存）
+    // 二分探索:ソート済みの配列から、中央の要素を基準にして目的のデータを高速に見つけるアルゴリズム
+    // 真ん中をためす-> OKなら右へ-> NGなら左へ -> 最大のok値をを探す
     let lo = 0
     let hi = text.length
+    //何文字目まで幅におさまるか確認
     while (lo < hi) {
+      //Math.ceil->切り上げ
       const mid = Math.ceil((lo + hi) / 2)
+      //指定範囲の文字列を取得(前半部分)
       const part = text.slice(0, mid)
+      //幅に収まる場合はloの値を更新
       if (this._textWidth(part) <= maxWidth) lo = mid
+      //収まらない場合はhiの値を更新
       else hi = mid - 1
     }
-
+    //収まる文字とはみ出る文字にわける
     const head = text.slice(0, lo)
     const tail = text.slice(lo)
-
+    //処理しているtextareaのDOM要素を上書き(収まる文字列に)
     el.value = head
-
+    //次のtextareaが存在して、収まらない文字がある場合の処理
     if (next && tail.length > 0) {
+      //元々次の行に入っていた文字列を定義(改行をならしたもの)
       const nextText = (next.value || "").replace(/\r?\n/g, "")
+      //元々入っていた文字の前に押し出した文字をいれる
       next.value = tail + nextText
 
-      // 追加：押し出し後にフォーカス移動（条件付き）
+      // 「行末で入力していた」ケースだけ、押し出し後に次の行へ自然に連れていく
       if (caretAtEnd) {
+        //次の行にカーソル移動
         next.focus()
-        // 次行の先頭に tail を足したので、その直後にカーソル
+        // 次行の先頭に tail を足したので、その直後にカーソルを移動
         const pos = tail.length
         next.setSelectionRange(pos, pos)
       }
@@ -123,7 +143,7 @@ export default class extends Controller {
   }
   //その文字列が今のフォント設定で何pxの横幅になるか返す関数
   _textWidth(str) {
-    //
+    //measureText()は測定したテキストの情報をもつオブジェクトを返す。(オブジェクトからwidth(横幅)のみ抽出
     return this._ctx.measureText(str).width
   }
   //IME確定後のEnterで次行へ移動するための処理
