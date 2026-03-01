@@ -310,4 +310,18 @@ Devise.setup do |config|
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
+
+  #Google OAuth (omniAuth)
+  #Google認証後に/users/auth/google_oauth2_callbackへ戻すための設定
+  config.omniauth :google_oauth2,
+    #Google Cloud Consoleで発行した鍵を、環境変数として設定
+    #ローカルでは.envに追加して、読み込む処理をcompose.yul等に追加
+    #本番はRenderに追加
+    ENV["GOOGLE_CLIENT_ID"],
+    ENV["GOOGLE_CLIENT_SECRET"],
+    #Googleのログイン画面で、どういう動きをしてほしいか指示
+    {
+      #どのGoogleアカウントでログインしますか？という選択画面がでる
+      prompt: "select_account"
+    }
 end

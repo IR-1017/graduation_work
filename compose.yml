@@ -46,6 +46,8 @@ services:  #コンテナの定義開始
       DATABASE_USER: postgres
       DATABASE_PASSWORD: password
       TZ: Asia/Tokyo
+    env_file:
+      - .env
     ports:
       - "3000:3000" #Railsの標準ポート,ブラウザから localhost:3000 で Rails サーバにアクセスできるようする
     depends_on: #依存関係の設定 ヘルスチェックがOKになったらDBを起動
